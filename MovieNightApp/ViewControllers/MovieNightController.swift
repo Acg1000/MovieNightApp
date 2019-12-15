@@ -9,10 +9,19 @@
 import UIKit
 
 class MovieNightController: UIViewController {
-
+    
+    let movieApiClient = MovieClient(APIKey: "931adb8f0fa9034f0eee754567a87c7f")
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        movieApiClient.discover(withGenres: [18], duringYear: 2019, sortedBy: .popularity) { results in
+            print(results)
+        }
+        
+        movieApiClient.getGenres() { results in
+            print(results)
+        }
         // Do any additional setup after loading the view.
     }
     

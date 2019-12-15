@@ -29,15 +29,17 @@ enum APIError: Error {
 protocol APIClient {
     var session: URLSession { get }
     
-    func fetch<T: JSONDecodable>(with request: URLRequest, parse: @escaping (JSON) -> T?, completion: @escaping (Result<T, APIError>) -> Void)
-    func fetch<T: JSONDecodable>(with request: URLRequest, parse: @escaping (JSON) -> [T], completion: @escaping (Result<[T], APIError>) -> Void)
+    func fetch<T: Decodable>(with request: URLRequest, completion: @escaping (Result<T, APIError>) -> Void, parse: @escaping (JSON) throws -> T?)
+    func fetch<T: Decodable>(with request: URLRequest, completion: @escaping (Result<[T], APIError>) -> Void, parse: @escaping (JSON) throws -> [T])
 }
 
 extension APIClient {
-    typealias JSON = [String: AnyObject]
-    typealias JSONTaskCompletionHandler = (JSON?, APIError?) -> Void
+    
+    typealias JSON = Data
+    typealias JSONTaskCompletionHandler = (Data?, APIError?) -> Void
     
     func jsonTask(with request: URLRequest, completionHandler completion: @escaping JSONTaskCompletionHandler) -> URLSessionDataTask {
+        
         let task = session.dataTask(with: request) { data, response, error in
             
             guard let httpResponse = response as? HTTPURLResponse else {
@@ -45,31 +47,33 @@ extension APIClient {
                 return
             }
             
+            // Print the request for debugging purposes
+            print("JSONTASK: \(request)")
+            
+            // Depending on the status code...
             if httpResponse.statusCode == 200 {
                 if let data = data {
-                    do {
-                        let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyObject]
-                        completion(json, nil)
-                    } catch {
-                        completion(nil, .jsonConversionFailure)
-                    }
+                    
+                    completion(data, nil)
+                    
                 } else {
                     completion(nil, .invalidData)
                 }
             } else {
                 completion(nil, .responseUnsuccessful)
             }
+            
         }
         
         return task
     }
     
-    func fetch<T: JSONDecodable>(with request: URLRequest, parse: @escaping (JSON) -> T?, completion: @escaping (Result<T, APIError>) -> Void) {
+    func fetch<T: Decodable>(with request: URLRequest, completion: @escaping (Result<T, APIError>) -> Void, parse: @escaping (JSON) throws -> T? ) {
         
-        let task = jsonTask(with: request) { json, error in
+        let task = jsonTask(with: request) { data, error in
             
             DispatchQueue.main.async {
-                guard let json = json else {
+                guard let data = data else {
                     if let error = error {
                         completion(Result.failure(error))
                     } else {
@@ -79,10 +83,33 @@ extension APIClient {
                     return
                 }
                 
-                if let value = parse(json) {
-                    completion(.success(value))
-                } else {
-                    completion(.failure(.jsonParsingFailure))
+                print("\nReturning data \(data)")
+                
+                do {
+                    if let value = try parse(data) {
+                        completion(Result.success(value))
+                    }
+                    
+                } catch DecodingError.dataCorrupted(let context) {
+                    print("Data Corrupted: context: \(context)")
+                    completion(Result.failure(APIError.jsonConversionFailure))
+                        
+                } catch DecodingError.keyNotFound(let key, let context) {
+                    print("\n\(key) was not found with \(context) \n")
+                    completion(Result.failure(APIError.jsonParsingFailure))
+                    
+                } catch DecodingError.typeMismatch(let type, let context) {
+                    print("Type Mismatch: type \(type), context \(context)")
+                    completion(Result.failure(APIError.jsonConversionFailure))
+                    
+                } catch DecodingError.valueNotFound(let type, let context) {
+                    print("Value Not Found: type \(type), context \(context)")
+                    completion(Result.failure(APIError.jsonConversionFailure))
+                    
+                } catch {
+                    print("Error with Decoded Character Results \(error)")
+                    completion(Result.failure(APIError.jsonParsingFailure))
+                  
                 }
             }
         }
@@ -90,12 +117,12 @@ extension APIClient {
         task.resume()
     }
     
-    func fetch<T: JSONDecodable>(with request: URLRequest, parse: @escaping (JSON) -> [T], completion: @escaping (Result<[T], APIError>) -> Void) {
+    func fetch<T: Decodable>(with request: URLRequest, completion: @escaping (Result<[T], APIError>) -> Void, parse: @escaping (JSON) throws -> [T] ) {
         
-        let task = jsonTask(with: request) { json, error in
+        let task = jsonTask(with: request) { data, error in
             
             DispatchQueue.main.async {
-                guard let json = json else {
+                guard let data = data else {
                     if let error = error {
                         completion(Result.failure(error))
                     } else {
@@ -105,12 +132,34 @@ extension APIClient {
                     return
                 }
                 
-                let value = parse(json)
-                
-                if !value.isEmpty {
-                    completion(.success(value))
-                } else {
-                    completion(.failure(.jsonParsingFailure))
+                do {
+                    // Trys to apply the decoder / parsing method to the JSON
+                    let value = try parse(data)
+                    
+                    if !value.isEmpty {
+                        completion(.success(value))
+                    } else {
+                        completion(.failure(.jsonParsingFailure))
+                    }
+                    
+                    // Error catching
+                } catch DecodingError.dataCorrupted {
+                    completion(Result.failure(APIError.jsonConversionFailure))
+                    
+                } catch DecodingError.keyNotFound(let key, let context) {
+                    print("\n\(key) was not found with \(context) \n")
+                    completion(Result.failure(APIError.jsonParsingFailure))
+                    
+                } catch DecodingError.typeMismatch {
+                    completion(Result.failure(APIError.jsonConversionFailure))
+                    
+                } catch DecodingError.valueNotFound {
+                    completion(Result.failure(APIError.jsonConversionFailure))
+                    
+                } catch {
+                    print("Error with Decoded Character Results \(error)")
+                    completion(Result.failure(APIError.jsonParsingFailure))
+                  
                 }
             }
         }

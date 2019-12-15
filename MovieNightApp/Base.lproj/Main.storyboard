@@ -10,7 +10,7 @@
         <!--Movie Night-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="MovieNightApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MovieNightController" customModule="MovieNightApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -148,7 +148,7 @@
         <!--Select genres-->
         <scene sceneID="NHS-wy-f5T">
             <objects>
-                <viewController id="DdW-RG-l0Y" sceneMemberID="viewController">
+                <viewController id="DdW-RG-l0Y" customClass="SelectGenresController" customModule="MovieNightApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9Tu-se-Du9">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -252,7 +252,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="haG-DW-IRa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1916" y="854"/>
+            <point key="canvasLocation" x="1845" y="854"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="v39-QP-Jjn">

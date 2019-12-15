@@ -46,7 +46,7 @@ extension Endpoint {
     }
 }
 
-enum MovieEndpoint {
+enum MovieEndpoints {
     enum MovieSortType: CustomStringConvertible {
         case popularity, releaseDate, voteCount
         
@@ -59,6 +59,40 @@ enum MovieEndpoint {
         }
     }
     
-    case discover(year: Int?, genres: [Int]?, sortBy: MovieSortType)
-    case getGenres
+    case discover(genres: [Int], year: Int, sortBy: MovieSortType, apiKey: String)
+    case getGenres(apiKey: String)
+}
+
+extension MovieEndpoints: Endpoint {
+    var base: String {
+        return "https://api.themoviedb.org"
+    }
+    
+    var path: String {
+        switch self {
+        case .discover: return "/3/discover/movie"
+        case .getGenres: return "/3/genre/movie/list"
+        }
+    }
+    
+    var queryItems: [URLQueryItem] {
+        switch self {
+        case .discover(let genres, let year, let sortBy, let apiKey):
+            
+            var genreString = ""
+            
+            for id in genres {
+                genreString.append("\(id),")
+            }
+            genreString.removeLast()
+            
+            return [
+                URLQueryItem(name: "year", value: "\(year)"),
+                URLQueryItem(name: "genres", value: genreString),
+                URLQueryItem(name: "sort_by", value: sortBy.description),
+                URLQueryItem(name: "api_key", value: apiKey)
+            ]
+        case .getGenres(let apiKey): return [ URLQueryItem(name: "api_key", value: apiKey) ]
+        }
+    }
 }

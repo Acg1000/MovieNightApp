@@ -8,22 +8,22 @@
 
 import Foundation
 
-class Movie {
+class Movie: Decodable {
     let title: String
     let overview: String
-    let release_date: String
+    let releaseDate: String
     let id: Int
     let adult: Bool
-    let popularity: Int
+    let popularity: Double
     let voteCount: Int
     
     init() {
         title = ""
         overview = ""
-        release_date = ""
+        releaseDate = ""
         id = 0
         adult = false
-        popularity = 0
+        popularity = 0.0
         voteCount = 0
     }
 }
