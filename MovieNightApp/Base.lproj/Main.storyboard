@@ -26,6 +26,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
+                                    <action selector="viewResultsPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2EF-7a-TK1"/>
                                     <segue destination="MkT-y7-5aa" kind="show" id="yf6-28-X3h"/>
                                 </connections>
                             </button>
@@ -43,7 +44,7 @@
                                                 </constraints>
                                                 <state key="normal" title="Button" image="person-outline"/>
                                                 <connections>
-                                                    <segue destination="DdW-RG-l0Y" kind="show" id="FGx-ZX-Cr6"/>
+                                                    <segue destination="DdW-RG-l0Y" kind="show" identifier="watcher1" id="FGx-ZX-Cr6"/>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Watcher 1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rkK-Yy-ZSk">
@@ -58,7 +59,7 @@
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="IOg-to-acy">
+                                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="IOg-to-acy">
                                                 <rect key="frame" x="227" y="134" width="30" height="30"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="30" id="4go-Qs-1Z2"/>
@@ -88,7 +89,7 @@
                                                 </constraints>
                                                 <state key="normal" title="Button" image="person-outline"/>
                                                 <connections>
-                                                    <segue destination="DdW-RG-l0Y" kind="show" id="OCh-Sb-rdJ"/>
+                                                    <segue destination="DdW-RG-l0Y" kind="show" identifier="watcher2" id="OCh-Sb-rdJ"/>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Watcher 2" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ttz-uq-plj">
@@ -140,6 +141,14 @@
                     <navigationItem key="navigationItem" title="Movie Night" id="xQb-Ln-bD6">
                         <barButtonItem key="rightBarButtonItem" title="Clear" id="tFQ-xa-Gt0"/>
                     </navigationItem>
+                    <connections>
+                        <outlet property="watcher1Button" destination="2iX-FS-KDc" id="d1z-7s-h9f"/>
+                        <outlet property="watcher1Check" destination="IOg-to-acy" id="D5Z-2B-AJ7"/>
+                        <outlet property="watcher1StateDescription" destination="ic4-wm-Wq5" id="dDe-qT-qnx"/>
+                        <outlet property="watcher2Button" destination="PMX-rn-Oer" id="kl6-V4-qDY"/>
+                        <outlet property="watcher2Check" destination="DsN-jc-5W6" id="g7E-rt-Gf0"/>
+                        <outlet property="watcher2StateDescription" destination="tD4-4w-IBn" id="3e0-3G-vrt"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
@@ -160,9 +169,12 @@
                                     <constraint firstAttribute="height" constant="60" id="gXS-Kb-yZX"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
-                                <state key="normal" title="(# of 5 selected)">
+                                <state key="normal" title="0 of 5 selected">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="genreSelectionButtonPressed:" destination="DdW-RG-l0Y" eventType="touchUpInside" id="kPz-Gp-PpN"/>
+                                </connections>
                             </button>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IjR-Vd-Pra">
                                 <rect key="frame" x="0.0" y="862" width="414" height="34"/>
@@ -172,6 +184,45 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="e6l-Qe-jL5">
                                 <rect key="frame" x="0.0" y="88" width="414" height="714"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="genreCell" id="zQm-Bk-JOW" customClass="GenreCell" customModule="MovieNightApp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="zQm-Bk-JOW" id="PG7-h7-Egl">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XuZ-AA-cnv">
+                                                    <rect key="frame" x="56" y="11.5" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="unchecked_mark" translatesAutoresizingMaskIntoConstraints="NO" id="Omr-sd-ga6">
+                                                    <rect key="frame" x="16" y="10" width="24" height="24"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="24" id="e68-tF-ww0"/>
+                                                        <constraint firstAttribute="width" constant="24" id="o8H-QQ-cw4"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="XuZ-AA-cnv" firstAttribute="centerY" secondItem="PG7-h7-Egl" secondAttribute="centerY" id="6hg-Cb-UGn"/>
+                                                <constraint firstItem="XuZ-AA-cnv" firstAttribute="leading" secondItem="Omr-sd-ga6" secondAttribute="trailing" constant="16" id="Z3H-pz-53h"/>
+                                                <constraint firstItem="Omr-sd-ga6" firstAttribute="centerY" secondItem="PG7-h7-Egl" secondAttribute="centerY" id="dkK-HU-o70"/>
+                                                <constraint firstItem="Omr-sd-ga6" firstAttribute="leading" secondItem="PG7-h7-Egl" secondAttribute="leading" constant="16" id="qTX-6h-aS2"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="genreCheckImage" destination="Omr-sd-ga6" id="407-K4-ZOH"/>
+                                            <outlet property="genreLabel" destination="XuZ-AA-cnv" id="fQU-gP-dqx"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="DdW-RG-l0Y" id="UQT-us-Vh1"/>
+                                    <outlet property="delegate" destination="DdW-RG-l0Y" id="CF1-lc-7ZR"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -187,8 +238,17 @@
                         <viewLayoutGuide key="safeArea" id="lXh-dg-V3V"/>
                     </view>
                     <navigationItem key="navigationItem" title="Select genres" id="3lz-1f-hmk">
-                        <barButtonItem key="rightBarButtonItem" title="Next" id="vD0-wX-ruR"/>
+                        <barButtonItem key="rightBarButtonItem" title="Next" id="vD0-wX-ruR">
+                            <connections>
+                                <action selector="nextButtonPressed:" destination="DdW-RG-l0Y" id="71L-wF-5NM"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="genreSelectionButton" destination="nym-fo-aIC" id="nCN-bC-dbX"/>
+                        <outlet property="nextButton" destination="vD0-wX-ruR" id="ki7-Ih-W32"/>
+                        <outlet property="tableView" destination="e6l-Qe-jL5" id="ell-ip-Xfv"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ElZ-NV-hID" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -276,6 +336,7 @@
     <resources>
         <image name="checkmark" width="77.5" height="77"/>
         <image name="person-outline" width="172.5" height="146.5"/>
+        <image name="unchecked_mark" width="112" height="112"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="FGx-ZX-Cr6"/>
