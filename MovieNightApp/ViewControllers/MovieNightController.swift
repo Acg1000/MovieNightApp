@@ -56,6 +56,20 @@ class MovieNightController: UIViewController {
         }
         // Do any additional setup after loading the view.
     }
+    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        
+        if identifier == "viewResults" {
+            if watcher1Genres.count == 0 || watcher2Genres.count == 0 {
+                showAlertView(withTitle: "Selection Invalid", andBody: "Please select genres for both watchers")
+                return false
+            } else {
+                return true
+            }
+        } else {
+            return true
+        }
+    }
 
     // MARK: PrepareForSeque Methods
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -73,16 +87,28 @@ class MovieNightController: UIViewController {
             selectGenresController.currentWatcher = .watcher2
             selectGenresController.delegate = self
 //            selectGenresController.watcher1Finished = watcher2Finished
+        } else if segue.identifier == "viewResults" {
+            let resultsController = segue.destination as! ResultsController
+            
+            resultsController.watcher1Genres = watcher1Genres
+            resultsController.watcher2Genres = watcher2Genres
+            
         }
     }
     
-    //MARK: Button Methods
-
-    @IBAction func viewResultsPressed(_ sender: Any) {
+    // MARK: Button Functions
+    
+    @IBAction func clearPressed(_ sender: Any) {
+        watcher1Genres = []
+        watcher2Genres = []
+        watcher1Finished = false
+        watcher2Finished = false
+        refreshView()
+        
     }
     
     
-    // MARK: Helper Classes
+    // MARK: Helper Functions
     
     func refreshView() {
         switch watcher1Finished {
@@ -114,6 +140,12 @@ class MovieNightController: UIViewController {
         for genre in genres {
             print("\(genre) = \(genre.name)")
         }
+    }
+    
+    func showAlertView(withTitle title: String, andBody body: String) {
+        let alert = UIAlertController(title: title, message: body, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Dismiss", style: .default))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 

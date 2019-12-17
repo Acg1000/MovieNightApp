@@ -26,8 +26,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <action selector="viewResultsPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2EF-7a-TK1"/>
-                                    <segue destination="MkT-y7-5aa" kind="show" id="yf6-28-X3h"/>
+                                    <segue destination="MkT-y7-5aa" kind="show" identifier="viewResults" id="yf6-28-X3h"/>
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="bTC-2d-dAc">
@@ -139,7 +138,11 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" title="Movie Night" id="xQb-Ln-bD6">
-                        <barButtonItem key="rightBarButtonItem" title="Clear" id="tFQ-xa-Gt0"/>
+                        <barButtonItem key="rightBarButtonItem" title="Clear" id="tFQ-xa-Gt0">
+                            <connections>
+                                <action selector="clearPressed:" destination="BYZ-38-t0r" id="Tag-QP-qx4"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="watcher1Button" destination="2iX-FS-KDc" id="d1z-7s-h9f"/>
@@ -257,34 +260,35 @@
         <!--Results-->
         <scene sceneID="Y0c-xC-Eoh">
             <objects>
-                <tableViewController id="MkT-y7-5aa" sceneMemberID="viewController">
+                <tableViewController id="MkT-y7-5aa" customClass="ResultsController" customModule="MovieNightApp" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Yjg-E4-Gqd">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="64" id="eUU-91-Ghj">
-                                <rect key="frame" x="0.0" y="28" width="414" height="64"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="movieCell" rowHeight="138" id="eUU-91-Ghj" customClass="MovieCell" customModule="MovieNightApp" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="414" height="138"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="eUU-91-Ghj" id="eL9-J8-qe5">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="138"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="B7j-z3-pWE">
-                                            <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="92" height="138"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="64" id="Pin-nq-zeo"/>
-                                                <constraint firstAttribute="height" constant="64" id="yIn-Xh-XK5"/>
+                                                <constraint firstAttribute="width" constant="92" id="Pin-nq-zeo"/>
+                                                <constraint firstAttribute="width" secondItem="B7j-z3-pWE" secondAttribute="height" multiplier="2:3" id="wcW-J3-VA6"/>
+                                                <constraint firstAttribute="height" constant="138" id="yIn-Xh-XK5"/>
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Movie Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JQm-bh-hfi">
-                                            <rect key="frame" x="96" y="11" width="83.5" height="21"/>
+                                            <rect key="frame" x="124" y="46" width="83.5" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Year" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oWH-IU-WVL">
-                                            <rect key="frame" x="96" y="32" width="30.5" height="18"/>
+                                            <rect key="frame" x="124" y="71" width="30.5" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
@@ -293,12 +297,17 @@
                                     <constraints>
                                         <constraint firstItem="oWH-IU-WVL" firstAttribute="leading" secondItem="JQm-bh-hfi" secondAttribute="leading" id="DAr-Ir-q3c"/>
                                         <constraint firstItem="JQm-bh-hfi" firstAttribute="leading" secondItem="B7j-z3-pWE" secondAttribute="trailing" constant="32" id="NZq-11-AKd"/>
-                                        <constraint firstItem="JQm-bh-hfi" firstAttribute="top" secondItem="eL9-J8-qe5" secondAttribute="topMargin" id="QGy-I7-FL6"/>
-                                        <constraint firstItem="oWH-IU-WVL" firstAttribute="top" secondItem="JQm-bh-hfi" secondAttribute="bottom" id="TL9-mm-sL2"/>
+                                        <constraint firstItem="JQm-bh-hfi" firstAttribute="top" secondItem="eL9-J8-qe5" secondAttribute="topMargin" constant="35" id="QGy-I7-FL6"/>
+                                        <constraint firstItem="oWH-IU-WVL" firstAttribute="top" secondItem="JQm-bh-hfi" secondAttribute="bottom" constant="4" id="TL9-mm-sL2"/>
                                         <constraint firstItem="B7j-z3-pWE" firstAttribute="leading" secondItem="eL9-J8-qe5" secondAttribute="leading" id="g0G-6Q-fjl"/>
                                         <constraint firstItem="B7j-z3-pWE" firstAttribute="top" secondItem="eL9-J8-qe5" secondAttribute="top" id="zC8-ZQ-8Ty"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="movieImage" destination="B7j-z3-pWE" id="pdr-W0-8ot"/>
+                                    <outlet property="movieTitle" destination="JQm-bh-hfi" id="5d3-LE-B6g"/>
+                                    <outlet property="releaseYear" destination="oWH-IU-WVL" id="SgD-Gt-buq"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -307,12 +316,17 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Results" id="ANH-b7-OLl">
-                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="vb9-NI-N9W"/>
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="vb9-NI-N9W">
+                            <connections>
+                                <action selector="donePressed:" destination="8hg-Va-BOH" id="OB7-LB-4cA"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="haG-DW-IRa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="8hg-Va-BOH" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1845" y="854"/>
+            <point key="canvasLocation" x="1844.9275362318842" y="853.79464285714278"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="v39-QP-Jjn">

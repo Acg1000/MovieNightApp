@@ -17,3 +17,15 @@ class Genre: Decodable {
         name = ""
     }
 }
+
+// Adding conformance to equatable
+
+extension Genre: Equatable {
+    static func == (lhs: Genre, rhs: Genre) -> Bool {
+        if lhs.name == rhs.name && lhs.id == rhs.id {
+            return true
+        } else {
+            return false
+        }
+    }
+}
