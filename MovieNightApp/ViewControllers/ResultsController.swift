@@ -13,6 +13,8 @@ class ResultsController: UITableViewController {
     var watcher1Genres: [Genre] = []
     var watcher2Genres: [Genre] = []
     
+//    var movies: [Movie] = []
+    
     var movies: [Movie] = [] {
         didSet {
             tableView.reloadData()
@@ -22,17 +24,23 @@ class ResultsController: UITableViewController {
     let client = MovieClient()
     let pendingOperations = PendingOperations()
     
+//    var numberOfGenresReturned: Int = 0 {
+//        didSet {
+//            if numberOfGenresReturned >= numberOfGenresToReturn {
+//                setUpTableView(withMovies: )
+//
+//            }
+//
+//        }
+//    }
+//    var numberOfGenresToReturn: Int = 0
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.rowHeight = 138
         getMovies()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
     // MARK: - Table view data source
@@ -49,53 +57,26 @@ class ResultsController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "movieCell", for: indexPath) as! MovieCell
         
+        let currentMovie = movies[indexPath.row]
         // Configure the cell...
-        cell.movieTitle.text = movies[indexPath.row].title
-        cell.releaseYear.text = movies[indexPath.row].releaseDate
-        cell.movieImage.image = movies[indexPath.row].artwork
+        cell.movieTitle.text = currentMovie.title
+        cell.movieImage.image = currentMovie.artwork
+        
+        if currentMovie.formattedReleaseDate != nil {
+            cell.releaseYear.text = currentMovie.formattedReleaseDate
 
-        if movies[indexPath.row].artworkState == .placeholder {
-            downloadArtworkForMovies(movies[indexPath.row], atIndexPath: indexPath)
+        } else {
+            cell.releaseYear.text = currentMovie.releaseDate
+        }
+//        cell.releaseYear.text = currentMovie.releaseDate
+
+        if currentMovie.artworkState == .placeholder {
+            downloadArtworkForMovies(currentMovie, atIndexPath: indexPath)
         }
         
         return cell
     }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
- */
-    
     // MARK: Helper Functions
     
     func setUpTableView(withMovies movies: [Movie]) {
@@ -103,8 +84,21 @@ class ResultsController: UITableViewController {
     }
     
     func prepareGenres() -> [Genre] {
-        //
-        let relatedGenres = watcher1Genres.filter(watcher1Genres.contains)
+        
+        // getting the genres that the user selected together
+        var relatedGenres = watcher1Genres.filter(watcher2Genres.contains)
+        
+        //printing it for clarity
+        print("\n\nThere are \(relatedGenres.count) related genres")
+        for genre in relatedGenres {
+            print(genre.name)
+        }
+        
+        if relatedGenres.isEmpty {
+            relatedGenres.append(watcher1Genres.randomElement()!)
+            relatedGenres.append(watcher2Genres.randomElement()!)
+        }
+        
         return relatedGenres
     }
     
@@ -116,20 +110,20 @@ class ResultsController: UITableViewController {
         for genre in genres {
             genreIDs.append(genre.id)
         }
-        
-        client.discover(withGenres: genreIDs, duringYear: 2019, sortedBy: .popularity) { result in
+
+        client.discover(withGenres: genreIDs, duringYear: "2019", sortedBy: .popularity) { result in
             switch result {
             case .success(let movies):
                 self.setUpTableView(withMovies: movies)
             case .failure(let error):
-                print("Error getting genres in SelectGamesController: \(error)")
+                print("Error getting genres in Results Controller: \(error)")
 
             }
         }
     }
     
     func downloadArtworkForMovies(_ movie: Movie, atIndexPath indexPath: IndexPath) {
-        print("Downloading Movie Artwork... ")
+//        print("Downloading Movie Artwork... ")
         if let _ = pendingOperations.downloadsInProgress[indexPath] {
             return
         }
@@ -142,7 +136,7 @@ class ResultsController: UITableViewController {
             }
             
             DispatchQueue.main.async {
-                print("I'm finished!")
+//                print("Artwork download finished!")
                 self.pendingOperations.downloadsInProgress.removeValue(forKey: indexPath)
                 self.tableView.reloadRows(at: [indexPath], with: .automatic)
             }
@@ -151,11 +145,8 @@ class ResultsController: UITableViewController {
         pendingOperations.downloadsInProgress[indexPath] = downloader
         pendingOperations.downloadQueue.addOperation(downloader)
     }
- 
-    // MARK: Button Functions
     
     @IBAction func donePressed(_ sender: Any) {
-        tableView.reloadData()
         
     }
 }

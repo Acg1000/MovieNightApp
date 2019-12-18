@@ -23,13 +23,11 @@ class MovieNightController: UIViewController {
     var watcher1Finished = false {
         didSet {
             refreshView()
-            printGenres(watcher1Genres)
         }
     }
     var watcher2Finished = false {
         didSet {
             refreshView()
-            printGenres(watcher2Genres)
         }
     }
     
@@ -43,18 +41,6 @@ class MovieNightController: UIViewController {
         
         refreshView()
         
-        print("Watcher 1 Genres: \(watcher1Genres.compactMap { print($0.name)} )")
-        print("Watcher 2 Genres: \(watcher2Genres.compactMap { print($0.name)} )")
-
-
-        movieApiClient.discover(withGenres: [18], duringYear: 2019, sortedBy: .popularity) { results in
-            print(results)
-        }
-        
-        movieApiClient.getGenres() { results in
-            print(results)
-        }
-        // Do any additional setup after loading the view.
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
@@ -115,31 +101,29 @@ class MovieNightController: UIViewController {
         case true:
             watcher1Check.isHidden = false
             watcher1Button.isEnabled = false
+            watcher1StateDescription.text = "Ready!"
             
         case false:
             watcher1Check.isHidden = true
             watcher1Button.isEnabled = true
+            watcher1StateDescription.text = "Tap to enter preferences"
+
         }
         
         switch watcher2Finished {
         case true:
             watcher2Check.isHidden = false
             watcher2Button.isEnabled = false
+            watcher2StateDescription.text = "Ready!"
 
         case false:
             watcher2Check.isHidden = true
             watcher2Button.isEnabled = true
+            watcher2StateDescription.text = "Tap to enter preferences"
 
         }
         
         print("Views refreshed")
-    }
-    
-    func printGenres(_ genres: [Genre]) {
-        print("Printing...")
-        for genre in genres {
-            print("\(genre) = \(genre.name)")
-        }
     }
     
     func showAlertView(withTitle title: String, andBody body: String) {

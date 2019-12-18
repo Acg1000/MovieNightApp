@@ -42,8 +42,6 @@ class SelectGenresController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 

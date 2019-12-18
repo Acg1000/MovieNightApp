@@ -27,6 +27,8 @@ class Movie: Decodable {
     
     var artwork: UIImage? = nil
     var artworkState = MovieArtworkState.placeholder
+    var dateFormatted = false
+    var formattedReleaseDate: String? = ""
     
     enum CodingKeys: String, CodingKey {
         case title
@@ -48,5 +50,23 @@ class Movie: Decodable {
         popularity = 0.0
         voteCount = 0
         posterPath = ""
+    }
+    
+    func configureDate() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US")
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        if !dateFormatted {
+            
+            guard let date = dateFormatter.date(from: releaseDate) else {
+                fatalError("date was not compatable from API")
+            }
+            
+            dateFormatter.dateStyle = .long
+            formattedReleaseDate = dateFormatter.string(from: date)
+            
+            dateFormatted = true
+        }
     }
 }

@@ -24,7 +24,7 @@ class ArtworkDownloader: Operation {
         }
         
         let urlString = "https://image.tmdb.org/t/p/w92\(movie.posterPath)"
-        print("Getting: \(urlString)")
+//        print("Getting: \(urlString)")
         
         guard let url = URL(string: urlString) else {
             return
@@ -32,18 +32,16 @@ class ArtworkDownloader: Operation {
         
         let imageData = try! Data(contentsOf: url)
         
-        print(imageData)
+//        print(imageData)
         
         if self.isCancelled {
             return
         }
         
         if imageData.count > 0 {
-            print("SUCCESS!")
             movie.artwork = UIImage(data: imageData)
             movie.artworkState = .downloaded
         } else {
-            print("FAIL! :(")
             movie.artworkState = .failed
         }
     }

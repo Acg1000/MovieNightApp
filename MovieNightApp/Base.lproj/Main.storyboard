@@ -318,13 +318,12 @@
                     <navigationItem key="navigationItem" title="Results" id="ANH-b7-OLl">
                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="vb9-NI-N9W">
                             <connections>
-                                <action selector="donePressed:" destination="8hg-Va-BOH" id="OB7-LB-4cA"/>
+                                <action selector="donePressed:" destination="MkT-y7-5aa" id="Sxj-OG-FDY"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="haG-DW-IRa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="8hg-Va-BOH" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1844.9275362318842" y="853.79464285714278"/>
         </scene>

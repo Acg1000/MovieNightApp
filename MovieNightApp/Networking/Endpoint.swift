@@ -59,7 +59,8 @@ enum MovieEndpoints {
         }
     }
     
-    case discover(genres: [Int], year: Int, sortBy: MovieSortType, apiKey: String)
+    case discoverWithGenres(genres: [Int], year: String, sortBy: MovieSortType, apiKey: String)
+    case discoverWithGenre(genre: Int, year: String, sortBy: MovieSortType, apiKey: String)
     case getGenres(apiKey: String)
 }
 
@@ -70,28 +71,40 @@ extension MovieEndpoints: Endpoint {
     
     var path: String {
         switch self {
-        case .discover: return "/3/discover/movie"
+        case .discoverWithGenres: return "/3/discover/movie"
+        case .discoverWithGenre: return "/3/discover/movie"
         case .getGenres: return "/3/genre/movie/list"
         }
     }
     
     var queryItems: [URLQueryItem] {
         switch self {
-        case .discover(let genres, let year, let sortBy, let apiKey):
+        case .discoverWithGenres(let genres, let year, let sortBy, let apiKey):
             
             var genreString = ""
             
             for id in genres {
-                genreString.append("\(id),")
+                genreString.append("\(id)%2C")
             }
-            genreString.removeLast()
+            genreString.removeLast(3)
             
             return [
-                URLQueryItem(name: "year", value: "\(year)"),
-                URLQueryItem(name: "genres", value: genreString),
-                URLQueryItem(name: "sort_by", value: sortBy.description),
-                URLQueryItem(name: "api_key", value: apiKey)
+                URLQueryItem(name: "api_key", value: apiKey),
+                URLQueryItem(name: "with_genres", value: genreString),
+                URLQueryItem(name: "sort_by", value: "\(sortBy.description).desc"),
+                URLQueryItem(name: "year", value: year),
+
             ]
+            
+        case .discoverWithGenre(let genre, let year, let sortBy, let apiKey):
+            return [
+                URLQueryItem(name: "api_key", value: apiKey),
+                URLQueryItem(name: "with_genres", value: "\(genre)"),
+                URLQueryItem(name: "sort_by", value: "\(sortBy.description).desc"),
+                URLQueryItem(name: "year", value: year),
+
+            ]
+            
         case .getGenres(let apiKey): return [ URLQueryItem(name: "api_key", value: apiKey) ]
         }
     }
