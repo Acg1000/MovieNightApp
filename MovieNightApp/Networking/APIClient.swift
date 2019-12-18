@@ -70,7 +70,6 @@ extension APIClient {
         
         let task = jsonTask(with: request) { data, error in
             
-            DispatchQueue.main.async {
                 guard let data = data else {
                     if let error = error {
                         completion(Result.failure(error))
@@ -107,7 +106,7 @@ extension APIClient {
                     print("Error with Decoded Character Results \(error)")
                     completion(Result.failure(APIError.jsonParsingFailure))
                   
-                }
+                
             }
         }
         
@@ -118,7 +117,6 @@ extension APIClient {
         
         let task = jsonTask(with: request) { data, error in
             
-            DispatchQueue.main.async {
                 guard let data = data else {
                     if let error = error {
                         completion(Result.failure(error))
@@ -157,7 +155,7 @@ extension APIClient {
                     print("Error with Decoded Character Results \(error)")
                     completion(Result.failure(APIError.jsonParsingFailure))
                   
-                }
+                
             }
         }
         

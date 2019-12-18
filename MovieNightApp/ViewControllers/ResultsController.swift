@@ -104,7 +104,12 @@ class ResultsController: UITableViewController {
                 switch result {
                 case .success(let movies):
                     print("there are \(movies.count) movies in this result")
-                    self?.setUpTableView(withMovies: movies)
+                    
+                    // Make the changes on the mainQueue
+                    DispatchQueue.main.async {
+                        self?.setUpTableView(withMovies: movies)
+
+                    }
                     
                 case .failure(let error):
                     print("Error getting genres in Results Controller: \(error)")

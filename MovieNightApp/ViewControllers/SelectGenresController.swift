@@ -126,7 +126,10 @@ class SelectGenresController: UIViewController, UITableViewDataSource, UITableVi
         client.getGenres() { [weak self] result in
             switch result {
             case .success(let genres):
-                self?.setupTableview(with: genres)
+                DispatchQueue.main.async {
+                    self?.setupTableview(with: genres)
+
+                }
                 
             case .failure(let error):
                 print("Error getting genres in SelectGamesController: \(error)")
