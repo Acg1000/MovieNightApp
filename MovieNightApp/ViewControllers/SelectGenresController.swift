@@ -123,13 +123,18 @@ class SelectGenresController: UIViewController, UITableViewDataSource, UITableVi
     
     // MARK: Data Gathering Functions
     func getGenres() {
-        client.getGenres() { result in
+        client.getGenres() { [weak self] result in
             switch result {
             case .success(let genres):
-                self.setupTableview(with: genres)
+                self?.setupTableview(with: genres)
                 
             case .failure(let error):
                 print("Error getting genres in SelectGamesController: \(error)")
+                
+                if error == .responseUnsuccessful || error == .requestFailed {
+                    self?.navigationController?.popViewController(animated: true)
+                    self?.showAlertView(withTitle: "Responce Unsuccessfull", andBody: "Check your internet and try again.")
+                }
             }
         }
     }

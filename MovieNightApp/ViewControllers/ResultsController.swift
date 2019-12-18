@@ -12,9 +12,7 @@ class ResultsController: UITableViewController {
 
     var watcher1Genres: [Genre] = []
     var watcher2Genres: [Genre] = []
-    
-//    var movies: [Movie] = []
-    
+        
     var movies: [Movie] = [] {
         didSet {
             print("UPDATING MOVIES")
@@ -25,17 +23,6 @@ class ResultsController: UITableViewController {
     let client = MovieClient()
     let pendingOperations = PendingOperations()
     var delegate: FinishedDelegate?
-    
-//    var numberOfGenresReturned: Int = 0 {
-//        didSet {
-//            if numberOfGenresReturned >= numberOfGenresToReturn {
-//                setUpTableView(withMovies: )
-//
-//            }
-//
-//        }
-//    }
-//    var numberOfGenresToReturn: Int = 0
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -113,14 +100,20 @@ class ResultsController: UITableViewController {
         }
         
         for genre in genres {
-            client.discover(withGenre: genre.id, duringYear: "2019", sortedBy: .popularity) { result in
+            client.discover(withGenre: genre.id, duringYear: "2019", sortedBy: .popularity) { [weak self] result in
                 switch result {
                 case .success(let movies):
                     print("there are \(movies.count) movies in this result")
-                    self.setUpTableView(withMovies: movies)
+                    self?.setUpTableView(withMovies: movies)
+                    
                 case .failure(let error):
                     print("Error getting genres in Results Controller: \(error)")
+                    
+                    if error == .responseUnsuccessful || error == .requestFailed {
+                        self?.navigationController?.popViewController(animated: true)
+                        self?.showAlertView(withTitle: "Responce Unsuccessfull", andBody: "Check your internet and try again.")
 
+                    }
                 }
             }
         }
@@ -152,5 +145,12 @@ class ResultsController: UITableViewController {
     
     @IBAction func donePressed(_ sender: Any) {
         delegate?.clearData()
+    }
+    
+    // Show an alertview
+    func showAlertView(withTitle title: String, andBody body: String) {
+        let alert = UIAlertController(title: title, message: body, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Dismiss", style: .default))
+        self.present(alert, animated: true, completion: nil)
     }
 }
