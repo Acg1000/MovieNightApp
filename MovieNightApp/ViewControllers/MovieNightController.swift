@@ -43,6 +43,7 @@ class MovieNightController: UIViewController {
         
     }
     
+    // Overriding method to check if the user has selected items for both watchers
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         
         if identifier == "viewResults" {
@@ -65,14 +66,13 @@ class MovieNightController: UIViewController {
             
             selectGenresController.currentWatcher = .watcher1
             selectGenresController.delegate = self
-//            selectGenresController.watcher2Finished = watcher2Finished
             
         } else if segue.identifier == "watcher2" {
             let selectGenresController = segue.destination as! SelectGenresController
 
             selectGenresController.currentWatcher = .watcher2
             selectGenresController.delegate = self
-//            selectGenresController.watcher1Finished = watcher2Finished
+            
         } else if segue.identifier == "viewResults" {
             let resultsController = segue.destination as! ResultsController
             
@@ -134,6 +134,9 @@ class MovieNightController: UIViewController {
 }
 
 
+// Adding conformance to UpdateWatcherDelegate
+// Allows us to transfer info from the SelectGenresController here after the user is done
+
 extension MovieNightController: UpdateWatcherDelegate {
     
     func update(_ watcher: Watcher, with genres: [Genre]) {
@@ -154,6 +157,9 @@ extension MovieNightController: UpdateWatcherDelegate {
         navigationController?.popViewController(animated: true)
     }
 }
+
+// Adding conformance to UpdateWatcherDelegate
+// Allows us to clear the data when user returns from the Results controller
 
 extension MovieNightController: FinishedDelegate {
     func clearData() {

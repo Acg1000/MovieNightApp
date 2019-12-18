@@ -26,16 +26,6 @@ class SelectGenresController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
     
-    
-//    var selectedGenres: [Genre] = [] {
-//        didSet {
-//            genreSelectionButton.setTitle("\(self.selectedGenres.count) of 5 selected", for: .normal)
-//            print("")
-//            self.selectedGenres.flatMap {print($0.name)}
-//            printSelectedGenres()
-//        }
-//    }
-    
     var selectedGenres: [Genre] = [] {
         didSet {
             genreSelectionButton.setTitle("\(self.selectedGenres.count) of 5 selected", for: .normal)
@@ -146,20 +136,10 @@ class SelectGenresController: UIViewController, UITableViewDataSource, UITableVi
     
     // MARK: Helper Functions
     
+    // Show an alertview
     func showAlertView(withTitle title: String, andBody body: String) {
         let alert = UIAlertController(title: title, message: body, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss", style: .default))
         self.present(alert, animated: true, completion: nil)
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

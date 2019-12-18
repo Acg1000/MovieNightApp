@@ -5,6 +5,7 @@
 //  Created by Andrew Graves on 12/14/19.
 //  Copyright © 2019 Andrew Graves. All rights reserved.
 //
+// PURPOSE: Creates a generalised APIClient that we can use as a format for different clients
 
 import Foundation
 
@@ -47,9 +48,6 @@ extension APIClient {
                 return
             }
             
-            // Print the request for debugging purposes
-            print("JSONTASK: \(request)")
-            
             // Depending on the status code...
             if httpResponse.statusCode == 200 {
                 if let data = data {
@@ -82,8 +80,7 @@ extension APIClient {
                     
                     return
                 }
-                
-                print("\nReturning data \(data)")
+                        
                 
                 do {
                     if let value = try parse(data) {

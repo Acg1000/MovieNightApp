@@ -5,6 +5,8 @@
 //  Created by Andrew Graves on 12/16/19.
 //  Copyright © 2019 Andrew Graves. All rights reserved.
 //
+//  Purpose: Download images for the results page.
+
 import Foundation
 import UIKit
 
@@ -24,16 +26,13 @@ class ArtworkDownloader: Operation {
         }
         
         let urlString = "https://image.tmdb.org/t/p/w92\(movie.posterPath)"
-//        print("Getting: \(urlString)")
         
         guard let url = URL(string: urlString) else {
             return
         }
         
         let imageData = try! Data(contentsOf: url)
-        
-//        print(imageData)
-        
+                
         if self.isCancelled {
             return
         }
