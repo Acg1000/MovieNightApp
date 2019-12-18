@@ -17,12 +17,14 @@ class ResultsController: UITableViewController {
     
     var movies: [Movie] = [] {
         didSet {
+            print("UPDATING MOVIES")
             tableView.reloadData()
         }
     }
     
     let client = MovieClient()
     let pendingOperations = PendingOperations()
+    var delegate: FinishedDelegate?
     
 //    var numberOfGenresReturned: Int = 0 {
 //        didSet {
@@ -68,7 +70,6 @@ class ResultsController: UITableViewController {
         } else {
             cell.releaseYear.text = currentMovie.releaseDate
         }
-//        cell.releaseYear.text = currentMovie.releaseDate
 
         if currentMovie.artworkState == .placeholder {
             downloadArtworkForMovies(currentMovie, atIndexPath: indexPath)
@@ -80,7 +81,7 @@ class ResultsController: UITableViewController {
     // MARK: Helper Functions
     
     func setUpTableView(withMovies movies: [Movie]) {
-        self.movies = movies
+        self.movies.append(contentsOf: movies)
     }
     
     func prepareGenres() -> [Genre] {
@@ -110,14 +111,17 @@ class ResultsController: UITableViewController {
         for genre in genres {
             genreIDs.append(genre.id)
         }
+        
+        for genre in genres {
+            client.discover(withGenre: genre.id, duringYear: "2019", sortedBy: .popularity) { result in
+                switch result {
+                case .success(let movies):
+                    print("there are \(movies.count) movies in this result")
+                    self.setUpTableView(withMovies: movies)
+                case .failure(let error):
+                    print("Error getting genres in Results Controller: \(error)")
 
-        client.discover(withGenres: genreIDs, duringYear: "2019", sortedBy: .popularity) { result in
-            switch result {
-            case .success(let movies):
-                self.setUpTableView(withMovies: movies)
-            case .failure(let error):
-                print("Error getting genres in Results Controller: \(error)")
-
+                }
             }
         }
     }
@@ -147,6 +151,6 @@ class ResultsController: UITableViewController {
     }
     
     @IBAction func donePressed(_ sender: Any) {
-        
+        delegate?.clearData()
     }
 }

@@ -76,6 +76,7 @@ class MovieNightController: UIViewController {
         } else if segue.identifier == "viewResults" {
             let resultsController = segue.destination as! ResultsController
             
+            resultsController.delegate = self
             resultsController.watcher1Genres = watcher1Genres
             resultsController.watcher2Genres = watcher2Genres
             
@@ -89,7 +90,6 @@ class MovieNightController: UIViewController {
         watcher2Genres = []
         watcher1Finished = false
         watcher2Finished = false
-        refreshView()
         
     }
     
@@ -150,6 +150,17 @@ extension MovieNightController: UpdateWatcherDelegate {
             return
             
         }
+        
+        navigationController?.popViewController(animated: true)
+    }
+}
+
+extension MovieNightController: FinishedDelegate {
+    func clearData() {
+        watcher1Genres = []
+        watcher2Genres = []
+        watcher1Finished = false
+        watcher2Finished = false
         
         navigationController?.popViewController(animated: true)
     }
